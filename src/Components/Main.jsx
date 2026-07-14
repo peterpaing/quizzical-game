@@ -39,11 +39,11 @@ export default function Main(){
         <section key={questionIndex} className="question-container">
             <p>{question}</p>
 
-            <ul>
+            
                 {allAnswershuffle[questionIndex].map((answer, answerIndex) => (
-                    <li key={answerIndex}>{answer}</li>
+                   <label key={answerIndex}><input type="radio" name={question}/>{answer}</label> 
                 ))}
-            </ul>
+            
         </section>
     )
 })
