@@ -36,22 +36,27 @@ export default function Main(){
 
     const render = questionsArr.map((question, questionIndex) => {
     return (
+        
         <section key={questionIndex} className="question-container">
             <p>{question}</p>
-
-            
-                {allAnswershuffle[questionIndex].map((answer, answerIndex) => (
-                   <label key={answerIndex}><input type="radio" name={question}/>{answer}</label> 
+            {allAnswershuffle[questionIndex].map((answer, answerIndex) => (
+                   <label key={answerIndex}><input type="radio" name={questionIndex} value={answer}/>{answer}</label> 
                 ))}
-            
         </section>
     )
 })
 
-
+    function formCheck(formData){
+            const userAns = Object.fromEntries(formData)
+            console.log(userAns)
+    }
+    
     return (
         <main>
+            <form action={formCheck}>
            {render} 
+           <button type="submit">Check Answer </button>
+           </form>
         </main>
     )
 }
