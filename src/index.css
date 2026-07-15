@@ -14,7 +14,6 @@ body {
   background-position: 160% 0%, 0% 110%;
 }
 
-
 main{
   width: 100%;
   padding:2em 1.2em;
@@ -49,11 +48,15 @@ label{
   padding: 4px 19px;
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-size: 0.79rem;
+  font-size: 0.8rem;
   text-align: center;
   color:#293264;
   border: 0.79px solid #4D5B9E;
   border-radius:7.94px;
+}
+
+label:has(input[type="radio"]:checked) {
+  background-color: #D6DBF5;
 }
 
 button{

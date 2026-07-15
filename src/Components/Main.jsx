@@ -1,28 +1,33 @@
-import { useEffect } from "react"
-import {useState} from "react"
+import { use, useEffect } from "react" ;
+import {useState} from "react" ;
 
 
 export default function Main(){
-    const [DataStorage,setDataStorage] =useState([])
+    const [DataStorage,setDataStorage] =useState([]);
+    const [answered , setAnswered] = useState([]);
     
-
     useEffect(()=>{
 
-    fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=medium&type=multiple')
-    .then(res=>res.json())
-    .then(data=>setDataStorage(data.results))
-    .catch(err=> console.log(err))
+        const fetchData = async () => {
+            try {
+                const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=medium&type=multiple');    
+                const data = await response.json() || [];
+                setDataStorage(data.results);
+            }catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-    },[]) 
+        fetchData();
+},[]) 
 
 
-    const questionsArr = DataStorage.map(n=>n.question)
-    const correctAnswer = DataStorage.map(n=>n.correct_answer)
-
+    const questionsArr = DataStorage.map(n=>n.question);
+    
     const allAnswershuffle = DataStorage.map(n=>{
-        const correct = n.correct_answer
-        const wrong = n.incorrect_answers
-        const allAns = [...wrong,correct]
+        const correct = n.correct_answer ;
+        const wrong = n.incorrect_answers ;
+        const allAns = [...wrong,correct];
 
         for (let i = allAns.length - 1; i > 0; i--) {
 
@@ -31,7 +36,7 @@ export default function Main(){
             [allAns[i], allAns[j]] = [allAns[j], allAns[i]];
         }
 
-         return allAns
+         return allAns;
     })
 
     const render = questionsArr.map((question, questionIndex) => {
@@ -46,10 +51,16 @@ export default function Main(){
     )
 })
 
-    function formCheck(formData){
-            const userAns = Object.fromEntries(formData)
-            console.log(userAns)
+        function formCheck(formData) {
+        const userAns = Object.fromEntries(formData);
+        setAnswered(userAns);
     }
+
+
+    const correctCount = DataStorage.filter(
+    (question, index) => answered[index] === question.correct_answer
+    ).length;
+    
     
     return (
         <main>
