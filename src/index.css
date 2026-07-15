@@ -59,6 +59,10 @@ label:has(input[type="radio"]:checked) {
   background-color: #D6DBF5;
 }
 
+.incorrect{
+  background-color: #F8BCBC;
+}
+
 button{
   width: 120px;
   height: 35px;

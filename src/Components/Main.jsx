@@ -1,10 +1,12 @@
-import { use, useEffect } from "react" ;
-import {useState} from "react" ;
+import { useState, useEffect } from "react" ;
+import clsx from 'clsx';
 
 
 export default function Main(){
     const [DataStorage,setDataStorage] =useState([]);
+    const [shuffleData , setShuffleData]= useState([])
     const [answered , setAnswered] = useState([]);
+    const [showResult , setShowResult] = useState(false)
     
     useEffect(()=>{
 
@@ -13,39 +15,46 @@ export default function Main(){
                 const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=medium&type=multiple');    
                 const data = await response.json() || [];
                 setDataStorage(data.results);
-            }catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
+                
+            const allAnswershuffle = data.results.map(n=>{
+                const correct = n.correct_answer ;
+                const wrong = n.incorrect_answers ;
+                const allAns = [...wrong,correct];
 
-        fetchData();
-},[]) 
+                for (let i = allAns.length - 1; i > 0; i--) {
 
+                    const j = Math.floor(Math.random() * (i + 1));
 
-    const questionsArr = DataStorage.map(n=>n.question);
-    
-    const allAnswershuffle = DataStorage.map(n=>{
-        const correct = n.correct_answer ;
-        const wrong = n.incorrect_answers ;
-        const allAns = [...wrong,correct];
-
-        for (let i = allAns.length - 1; i > 0; i--) {
-
-            const j = Math.floor(Math.random() * (i + 1));
-
-            [allAns[i], allAns[j]] = [allAns[j], allAns[i]];
-        }
+                    [allAns[i], allAns[j]] = [allAns[j], allAns[i]];
+                }
 
          return allAns;
-    })
+        })      
+                setShuffleData(allAnswershuffle)
+                }catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
 
+            fetchData();
+    },[]) 
+
+    const questionsArr = DataStorage.map(n=>n.question);
     const render = questionsArr.map((question, questionIndex) => {
     return (
         
         <section key={questionIndex} className="question-container">
             <p>{question}</p>
-            {allAnswershuffle[questionIndex].map((answer, answerIndex) => (
-                   <label key={answerIndex}><input type="radio" name={questionIndex} value={answer}/>{answer}</label> 
+            {shuffleData[questionIndex].map((answer, answerIndex) => (
+
+                   <label key={answerIndex}
+                    className={clsx((showResult&& answered[questionIndex] !== DataStorage[questionIndex].correct_answer) &&
+                        answered[questionIndex]=== answer ? 'incorrect' : null
+                    )}
+
+                   ><input type="radio" name={questionIndex} value={answer}/>{answer}
+
+                   </label> 
                 ))}
         </section>
     )
@@ -54,6 +63,7 @@ export default function Main(){
         function formCheck(formData) {
         const userAns = Object.fromEntries(formData);
         setAnswered(userAns);
+        setShowResult(true)
     }
 
 
