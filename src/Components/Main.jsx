@@ -12,7 +12,7 @@ export default function Main(){
 
         const fetchData = async () => {
             try {
-                const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=medium&type=multiple');    
+                const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple');    
                 const data = await response.json() || [];
                 const decodedResults = data.results.map(question => ({
                     ...question,
@@ -48,11 +48,15 @@ export default function Main(){
     },[]) 
 
     const questionsArr = DataStorage.map(n=>n.question);
+
     const render = questionsArr.map((question, questionIndex) => {
     return (
-        
         <section key={questionIndex} className="question-container">
-            <p>{question}</p>
+            <fieldset  aria-describedby={
+                showResult ? `question-feedback-${questionIndex}` : undefined
+            }>
+
+            <legend>{question}</legend>
             {shuffleData[questionIndex].map((answer, answerIndex) => (
 
                    <label key={answerIndex}
@@ -60,10 +64,23 @@ export default function Main(){
                         answered[questionIndex]=== answer ? 'incorrect' : null
                     )}
 
-                   ><input type="radio" name={questionIndex} value={answer}/>{answer}
+                   ><input type="radio" name={questionIndex}
+                    value={answer}
+                   disabled={showResult}
+                   />{answer}
 
                    </label> 
+
                 ))}
+
+                {showResult?
+                 <p id={`question-feedback-${questionIndex}`} className="sr-only">
+                    {DataStorage[questionIndex].correct_answer === answered[questionIndex]?
+                      'Your answer is correct.' :
+                     `Your answer is incorrect . Correct answer is ${DataStorage[questionIndex].correct_answer}`}
+                    </p> : ''}
+
+                </fieldset>
         </section>
     )
 })
@@ -71,7 +88,7 @@ export default function Main(){
         function formCheck(formData) {
         const userAns = Object.fromEntries(formData);
         setAnswered(userAns);
-        setShowResult(true)
+        setShowResult(true);
     }
 
 
