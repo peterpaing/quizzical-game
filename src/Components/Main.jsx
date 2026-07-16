@@ -4,9 +4,9 @@ import {decode} from 'html-entities';
 
 export default function Main(){
     const [DataStorage,setDataStorage] =useState([]);
-    const [shuffleData , setShuffleData]= useState([])
+    const [shuffleData , setShuffleData]= useState([]);
     const [answered , setAnswered] = useState([]);
-    const [showResult , setShowResult] = useState(false)
+    const [showResult , setShowResult] = useState(false);
     
     useEffect(()=>{
 
@@ -52,21 +52,23 @@ export default function Main(){
     const render = questionsArr.map((question, questionIndex) => {
     return (
         <section key={questionIndex} className="question-container">
-            <fieldset  aria-describedby={
-                showResult ? `question-feedback-${questionIndex}` : undefined
-            }>
+            <fieldset  aria-required="true" 
+            aria-describedby={showResult ? `question-feedback-${questionIndex}` : undefined }>
 
             <legend>{question}</legend>
             {shuffleData[questionIndex].map((answer, answerIndex) => (
-
+                    
                    <label key={answerIndex}
-                    className={clsx((showResult&& answered[questionIndex] !== DataStorage[questionIndex].correct_answer) &&
-                        answered[questionIndex]=== answer ? 'incorrect' : null
-                    )}
+                    className={clsx({
+                    incorrect: showResult && answered[questionIndex] === answer &&
+                    answered[questionIndex] !== DataStorage[questionIndex].correct_answer,
+                    correct: showResult && answer === DataStorage[questionIndex].correct_answer
+                    })}
 
                    ><input type="radio" name={questionIndex}
                     value={answer}
                    disabled={showResult}
+                   required 
                    />{answer}
 
                    </label> 
