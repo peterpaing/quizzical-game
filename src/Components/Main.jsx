@@ -5,54 +5,67 @@ import {decode} from 'html-entities';
 export default function Main(){
     const [DataStorage,setDataStorage] =useState([]);
     const [shuffleData , setShuffleData]= useState([]);
-    const [answered , setAnswered] = useState([]);
+    const [answered , setAnswered] = useState({});
     const [showResult , setShowResult] = useState(false);
     
-    useEffect(()=>{
+    const fetchData = async () => {
+        try {
+            const response = await fetch(
+                'https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple'
+            );
 
-        const fetchData = async () => {
-            try {
-                const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple');    
-                const data = await response.json() || [];
-                const decodedResults = data.results.map(question => ({
-                    ...question,
-                    question: decode(question.question),
-                    correct_answer: decode(question.correct_answer),
-                    incorrect_answers: question.incorrect_answers.map(answer =>
-                        decode(answer)
-                    )
-                }));
+            const data = await response.json();
 
-                setDataStorage(decodedResults);
-                const allAnswershuffle = decodedResults.map(n=>{
-                const correct = n.correct_answer ;
-                const wrong = n.incorrect_answers ;
-                const allAns = [...wrong,correct];
+            const decodedResults = data.results.map(question => ({
+                ...question,
+                question: decode(question.question),
+                correct_answer: decode(question.correct_answer),
+                incorrect_answers: question.incorrect_answers.map(answer =>
+                    decode(answer)
+                )
+            }));
+
+            setDataStorage(decodedResults);
+
+            const allAnswershuffle = decodedResults.map(n => {
+                const correct = n.correct_answer;
+                const wrong = n.incorrect_answers;
+                const allAns = [...wrong, correct];
 
                 for (let i = allAns.length - 1; i > 0; i--) {
-
                     const j = Math.floor(Math.random() * (i + 1));
 
                     [allAns[i], allAns[j]] = [allAns[j], allAns[i]];
                 }
 
-         return allAns;
-        })      
-                setShuffleData(allAnswershuffle)
-                }catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            };
+                return allAns;
+            });
 
+            setShuffleData(allAnswershuffle);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+
+        useEffect(() => {
             fetchData();
-    },[]) 
+        }, []);
+
+
+        function playAgain() {
+        setAnswered({});
+        setShowResult(false);
+        fetchData();
+        }
 
     const questionsArr = DataStorage.map(n=>n.question);
 
     const render = questionsArr.map((question, questionIndex) => {
     return (
         <section key={questionIndex} className="question-container">
-            <fieldset  aria-required="true" 
+            <fieldset 
             aria-describedby={showResult ? `question-feedback-${questionIndex}` : undefined }>
 
             <legend>{question}</legend>
@@ -98,12 +111,19 @@ export default function Main(){
     (question, index) => answered[index] === question.correct_answer
     ).length;
     
-    
+       
+
     return (
         <main>
-            <form action={formCheck}>
+            <form action={formCheck} onReset={playAgain}>
            {render} 
-           <button type="submit">Check Answer </button>
+           {showResult?
+           <div className="score">
+           <p>{`You scored ${correctCount}/4 correct answers`}</p>
+           <button type="reset">Play again</button>
+           </div> :
+           <button type="submit">Check Answer</button>
+        }
            </form>
         </main>
     )
