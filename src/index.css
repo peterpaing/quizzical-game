@@ -30,9 +30,9 @@ main{
 
 .question-container legend{
   margin-bottom:0.7em;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 1.1rem;
-  line-height: 130%;
+  line-height: 110%;
 }
 
 input[type="radio"] {
@@ -97,4 +97,16 @@ button:hover,button:focus{
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.score{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score p{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
