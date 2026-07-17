@@ -149,6 +149,10 @@ button:hover,button:focus{
 
 @media (min-width: 768px){
 
+  body{
+  background-position: 100% 0%, 0% 100%;
+  }
+
   main{
     padding:6em 1.2em;
   }
