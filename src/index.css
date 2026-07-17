@@ -157,39 +157,7 @@ button:hover,button:focus{
     padding:6em 1.2em;
   }
 
-  .loading-icon,.loading p{
-    font-size: 2rem;
-  }
-
-  .error{
-   font-size: 2rem;
+  .loading,.error {
+  min-height: 50vh;
 }
-
- .question-container{
-    padding-bottom: 1.5em;
-  }
-  
-  .question-container:not(:first-of-type){
-  padding-top: 2em;
-}
-
-  .question-container legend{
-    font-size: 1.8rem;
-  }
-
-  label{
-    font-size: 1.5rem;
-    margin: 0.5em;
-  }
-
-  button{
-    width: 200px;
-    height: 65px;
-    margin-top: 2.5em;
-    font-size: 1.3rem;
-  }
-
-  .score p{
-    font-size: 1.5rem;
-  }
 }
