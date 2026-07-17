@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react" ;
 import clsx from 'clsx';
 import {decode} from 'html-entities';
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function Main(){
     const [DataStorage,setDataStorage] =useState([]);
     const [shuffleData , setShuffleData]= useState([]);
     const [answered , setAnswered] = useState({});
     const [showResult , setShowResult] = useState(false);
+    const [loading, setLoading] = useState(true);
     
     const fetchData = async () => {
+        setLoading(true)
         try {
             const response = await fetch(
                 'https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple'
@@ -45,7 +48,9 @@ export default function Main(){
 
             } catch (error) {
                 console.error('Error fetching data:', error);
-            }
+            }finally{
+            setLoading(false);
+        }
         };
 
 
@@ -115,14 +120,21 @@ export default function Main(){
 
     return (
         <main>
+            {loading && (
+            <div className="loading">
+            <AiOutlineLoading3Quarters  className="loading-icon" />
+            <p>Loading<span className="dots"></span></p>
+            </div>
+    )}
+    
             <form action={formCheck} onReset={playAgain}>
            {render} 
            {showResult?
            <div className="score">
-           <p>{`You scored ${correctCount}/4 correct answers`}</p>
+           <p aria-live="polite">{`You scored ${correctCount}/4 correct answers`}</p>
            <button type="reset">Play again</button>
-           </div> :
-           <button type="submit">Check Answer</button>
+           </div> : DataStorage.length>0 ?
+           <button type="submit">Check Answer</button> : null
         }
            </form>
         </main>

@@ -19,6 +19,25 @@ main{
   padding:2em 1.2em;
 }
 
+.loading {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-icon {
+  font-size: 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .question-container{
   padding-bottom: 1em;
   border-bottom: 0.79px solid #DBDEF0;
@@ -26,6 +45,12 @@ main{
 
 .question-container:not(:first-of-type){
   padding-top: 1.5em;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .question-container legend{
