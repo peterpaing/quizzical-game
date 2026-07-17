@@ -12,6 +12,8 @@ body {
   background-image: url("./assets/bg1.png"), url("./assets/bg2.png");
   background-repeat: no-repeat, no-repeat;
   background-position: 160% 0%, 0% 110%;
+  display: flex;
+  justify-content: center;
 }
 
 main{
@@ -70,7 +72,7 @@ input[type="radio"] {
 label{
   display: inline-block;
   margin: 0.3em;
-  padding: 4px 19px;
+  padding: 0.25em 1.1875em;
   font-family: "Inter", sans-serif;
   font-weight: 500;
   font-size: 0.8rem;
@@ -134,4 +136,43 @@ button:hover,button:focus{
   font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
+}
+
+@media (min-width: 768px){
+
+  main{
+    padding:6em 1.2em;
+  }
+
+  .loading-icon,.loading p{
+    font-size: 2rem;
+  }
+
+ .question-container{
+    padding-bottom: 1.5em;
+  }
+  
+  .question-container:not(:first-of-type){
+  padding-top: 2em;
+}
+
+  .question-container legend{
+    font-size: 1.8rem;
+  }
+
+  label{
+    font-size: 1.5rem;
+    margin: 0.5em;
+  }
+
+  button{
+    width: 200px;
+    height: 65px;
+    margin-top: 2.5em;
+    font-size: 1.3rem;
+  }
+
+  .score p{
+    font-size: 1.5rem;
+  }
 }
