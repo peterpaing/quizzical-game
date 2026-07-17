@@ -40,6 +40,15 @@ main{
   }
 }
 
+.error{
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+}
+
 .question-container{
   padding-bottom: 1em;
   border-bottom: 0.79px solid #DBDEF0;
@@ -147,6 +156,10 @@ button:hover,button:focus{
   .loading-icon,.loading p{
     font-size: 2rem;
   }
+
+  .error{
+   font-size: 2rem;
+}
 
  .question-container{
     padding-bottom: 1.5em;

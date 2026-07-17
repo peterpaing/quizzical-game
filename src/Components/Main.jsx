@@ -2,6 +2,7 @@ import { useState, useEffect } from "react" ;
 import clsx from 'clsx';
 import {decode} from 'html-entities';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { MdErrorOutline } from "react-icons/md";
 
 export default function Main(){
     const [DataStorage,setDataStorage] =useState([]);
@@ -9,13 +10,18 @@ export default function Main(){
     const [answered , setAnswered] = useState({});
     const [showResult , setShowResult] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
     
     const fetchData = async () => {
-        setLoading(true)
-        try {
-            const response = await fetch(
-                'https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple'
-            );
+        setHasError(false);
+        setLoading(true);
+
+            try {
+                const response = await fetch('https://opentdb.com/api.php?amount=4&category=9&difficulty=easy&type=multiple');
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch questions");
+            }
 
             const data = await response.json();
 
@@ -48,6 +54,9 @@ export default function Main(){
 
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setHasError(true);
+                setDataStorage([])
+
             }finally{
             setLoading(false);
         }
@@ -60,6 +69,7 @@ export default function Main(){
 
 
         function playAgain() {
+        setDataStorage([]);
         setAnswered({});
         setShowResult(false);
         fetchData();
@@ -120,12 +130,19 @@ export default function Main(){
 
     return (
         <main>
-            {loading && (
+            {loading && DataStorage.length==0 ?(
             <div className="loading">
             <AiOutlineLoading3Quarters  className="loading-icon" />
             <p>Loading<span className="dots"></span></p>
             </div>
-    )}
+    ):null}
+
+            {hasError &&(
+               <div className="error">
+            <MdErrorOutline  className="error-icon" />
+            <p>Error occurred. Please refresh again.</p>
+            </div> 
+            )}
     
             <form action={formCheck} onReset={playAgain}>
            {render} 
